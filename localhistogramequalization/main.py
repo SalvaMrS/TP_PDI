@@ -64,3 +64,6 @@ class LocalHistogramEqualizer:
             cv2.destroyAllWindows()
         except Exception as e:
             self.logger.error(f'Error al mostrar la imagen procesada: {str(e)}')
+
+    def close(self):
+        cv2.destroyAllWindows()
