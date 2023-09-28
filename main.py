@@ -1,6 +1,6 @@
 from localhistogramequalization.main import LocalHistogramEqualizer
 
-window_size = 15
+window_size = 10
 image_path = 'Imagenes/Imagen_con_detalles_escondidos.tif'
 equalizer = LocalHistogramEqualizer(image_path, window_size)
 output_image = equalizer.equalize()

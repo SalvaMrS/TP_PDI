@@ -66,11 +66,3 @@ class LocalHistogramEqualizer:
             self.logger.error(f'Error al mostrar la imagen procesada: {str(e)}')
 
 
-# Ejemplo de uso:
-image_path = 'imagen.png'
-window_size = 15
-equalizer = LocalHistogramEqualizer(image_path, window_size)
-output_image = equalizer.equalize()
-if output_image is not None:
-    equalizer.show_input_image()
-    equalizer.show_output_image(output_image)
