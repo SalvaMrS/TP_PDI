@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Ruta de la imagen del formulario
-ruta_imagen = './imagenes/formulario_01.png'
+ruta_imagen = 'Imagenes/formulario_02.png'
 
 # Cargar la imagen en escala de grises
 imagen = cv2.imread(ruta_imagen, cv2.IMREAD_GRAYSCALE)
