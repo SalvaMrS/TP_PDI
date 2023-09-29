@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 import logging
 
 
@@ -35,6 +36,7 @@ class LocalHistogramEqualizer:
     def __init__(self, image_path, window_size):
         self.image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
         self.window_size = window_size
+        self.output_image = self.equalize()
         self.logger = setup_logger()
 
     def equalize(self):
@@ -64,6 +66,20 @@ class LocalHistogramEqualizer:
         except Exception as e:
             self.logger.error(f'Error en la ecualización local del histograma: {str(e)}')
             return None
+
+    def show_images(self):
+        """
+        Muestra la imagen original y la ecualizada una al lado de la otra.
+        """
+
+        try:
+            plt.subplot(121), plt.imshow(self.image, cmap='gray'), plt.title('Imagen Original')
+            plt.subplot(122), plt.imshow(self.output_image, cmap='gray'), plt.title('Imagen Procesada')
+            plt.show()
+
+        except Exception as e:
+            error_message = f'Error al mostrar las imagenes: {str(e)}'
+            self.logger.error(error_message)
 
     def show_input_image(self):
         """

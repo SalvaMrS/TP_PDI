@@ -32,6 +32,8 @@ class FormFieldExtractor:
         self.coordenadas_lineas = []
         self.recortes = []
         self.recortes_conservados = []
+        self.extract_lines()
+        self.extract_fields()
 
     def extract_lines(self):
         """
