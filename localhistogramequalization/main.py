@@ -25,14 +25,13 @@ class LocalHistogramEqualizer:
     Clase para realizar la ecualización local del histograma en una imagen en escala de grises.
 
     Args:
-       image_path (str): Ruta de la imagen de entrada.
-       window_size (int): Tamaño de la ventana para la ecualización local.
+      image_path (str): Ruta de la imagen de entrada.
+      window_size (int): Tamaño de la ventana para la ecualización local.
 
     Attributes:
-       image (numpy.ndarray): La imagen en escala de grises a procesar.
-       window_size (int): El tamaño de la ventana para la ecualización local.
+      image (numpy.ndarray): La imagen en escala de grises a procesar.
+      window_size (int): El tamaño de la ventana para la ecualización local.
     """
-
     def __init__(self, image_path, window_size):
         self.image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
         self.window_size = window_size
@@ -49,28 +48,21 @@ class LocalHistogramEqualizer:
             half_window = self.window_size // 2
             output_image = np.copy(self.image)
 
-            # Calcular histograma y CDF una vez para toda la imagen
-            hist, _ = np.histogram(self.image.flatten(), bins=256, range=(0, 256))
-            cdf = hist.cumsum()
-            cdf_normalized = (cdf - cdf.min()) * 255 / (cdf.max() - cdf.min())
-
-            # Crear una matriz de índices para acceder a los valores de CDF normalizado
-            index_matrix = np.arange(256)
-
             for y in range(half_window, height - half_window):
                 for x in range(half_window, width - half_window):
                     roi = self.image[y - half_window:y + half_window + 1, x - half_window:x + half_window + 1]
-                    if roi.size == 0:
+                    hist, _ = np.histogram(roi.flatten(), bins=256, range=(0, 256))
+                    if hist.max() == 0:
                         continue
-                    roi_flat = roi.flatten()
-                    cdf_values = cdf_normalized[roi_flat]
-                    mapped_values = np.interp(cdf_values, index_matrix, cdf_normalized)
-                    output_image[y, x] = mapped_values[0]
+                    cdf = hist.cumsum()
+                    if (cdf.max() - cdf.min()) == 0:
+                        continue
+                    cdf_normalized = (cdf - cdf.min()) * 255 / (cdf.max() - cdf.min())
+                    output_image[y, x] = cdf_normalized[roi[0, 0]]
 
             return output_image
         except Exception as e:
-            error_message = f'Error en la ecualización local del histograma: {str(e)}'
-            self.logger.error(error_message)
+            self.logger.error(f'Error en la ecualización local del histograma: {str(e)}')
             return None
 
     def show_input_image(self):
