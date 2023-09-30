@@ -2,8 +2,8 @@
 
 ## Integrantes:
 
-Marcos, Previgliano
 Ponce, Daniel
+Previgliano, Marcos
 Sanchez, Salvador
 Yañez, Mirian
 
