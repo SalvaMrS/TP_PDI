@@ -1,101 +1,100 @@
-import os
-from formfieldextractor.main import FormFieldExtractor
-from localhistogramequalization.main import LocalHistogramEqualizer
+import logging
+from formfieldextractor.fieldextractor import FormFieldExtractor
+from localhistogramequalization.histogramequalization import LocalHistogramEqualizer
 
-directorio_imagenes = './imagenes/'
+# Configuración del logger
+def setup_logger():
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
 
-def menu_1():
-    """
-    Menu iteractivo de la actividad 1
-    """
+    # Crear un archivo de registro
+    handler = logging.FileHandler('main.log')
+    handler.setLevel(logging.DEBUG)
 
+    # Formato de registro
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+
+    # Agregar el manejador al registro
+    logger.addHandler(handler)
+    return logger
+
+logger = setup_logger()
+
+# Imágenes disponibles
+imagenes = {
+    1: 'Imagenes/formulario_01.png',
+    2: 'Imagenes/formulario_02.png',
+    3: 'Imagenes/formulario_03.png',
+    4: 'Imagenes/formulario_04.png',
+    5: 'Imagenes/formulario_05.png',
+    6: 'Imagenes/formulario_vacio.png'
+}
+
+# Opción 1: Ecualización local de histograma
+def opcion_1():
+    try:
+        window_size = int(input("Selecciona un tamaño de ventana para el Ejercicio 1: "))
+        image_path = 'Imagenes/Imagen_con_detalles_escondidos.tif'
+        equalizer = LocalHistogramEqualizer(image_path, window_size)
+        equalizer.show_images()
+
+    except ValueError as ve:
+        print(f"Error: {ve}")
+        logger.error(f"Error en el Ejercicio 1: {ve}")
+    except Exception as e:
+        logger.error(f"Error en el Ejercicio 1: {str(e)}")
+
+# Opción 2: Validación de formulario
+def opcion_2():
     while True:
-        os.system('cls' if os.name == 'nt' else 'clear')
-        
-        try:
-            window_size = input("Tamaño de la ventana ('C' para salir): ")
+        print('Seleccione una imagen para analizar: ')
+        for key, value in imagenes.items():
+            print(f'{key}. {value}')
 
-            if window_size.lower() == 'c':
-                break
+        seleccion = input("Elija la imagen a analizar ('p' para regresar al menú anterior o 's' para salir): ")
 
-            image_path = 'Imagenes/Imagen_con_detalles_escondidos.tif'
-            equalizer = LocalHistogramEqualizer(image_path, int(window_size))
-            equalizer.show_images()
+        if seleccion.lower() == 'p':
+            break  
 
-        except ValueError:
-            os.system('cls' if os.name == 'nt' else 'clear')
-            input("Entrada no válida. Debe ingresar un número o 'C' para salir.")
-        
-def menu_2():
-    """
-    Menu iteractivo de la actividad 2
-    """
-
-    while True:
-        os.system('cls' if os.name == 'nt' else 'clear')
-        archivos_imagenes = [archivo for archivo in os.listdir(directorio_imagenes) if archivo.endswith('.png')]
-
-        print("Seleccione una imagen para analizar:\n")
-        
-        for i, imagen in enumerate(archivos_imagenes, 1):
-            print(f"{i}. {imagen}")
+        if seleccion.lower() == 's':
+            print("Saliendo de la opción 2...")
+            return  # Salir de la función opcion_2
 
         try:
-            seleccion = input("Elija la imagen a analizar ('C' para salir): ")
-
-            if seleccion.lower() == 'c':
-                break
-
             seleccion = int(seleccion)
+            imagen = imagenes.get(seleccion, '')
 
-            if 1 <= seleccion <= len(archivos_imagenes):
-                os.system('cls' if os.name == 'nt' else 'clear')
-                ruta_imagen_seleccionada = os.path.join(directorio_imagenes, archivos_imagenes[seleccion - 1])
-
-                extractor = FormFieldExtractor(ruta_imagen_seleccionada)
+            if imagen:
+                extractor = FormFieldExtractor(imagen)
                 resultados = extractor.extract_form_fields()
-
+                            
                 for idx, (campo, resultado) in enumerate(resultados, 1):
                     print(f"{idx}. {campo}:\t{resultado}")
+            
+        except ValueError as ve:
+            print(f"Error: {ve}")
+            logger.error(f"Error en la Opción 2: {ve}")
 
-                input("\nPresione Enter para continuar...")
-
-            else:
-                os.system('cls' if os.name == 'nt' else 'clear')
-                input("Selección no válida. Debe elegir un número de imagen válido.")
-
-        except ValueError:
-            os.system('cls' if os.name == 'nt' else 'clear')
-            input("Entrada no válida. Debe ingresar un número o 'C' para salir.")
-
-def Menu_principal():
-    """
-    Muestra el menu raiz
-    """
+# Menú principal
+def menu():
     while True:
-        os.system('cls' if os.name == 'nt' else 'clear')
+        print("\nMenú:")
+        print("1) Ecualización local de histograma")
+        print("2) Validación de formulario")
+        print("s) Salir")
 
-        print("Menú Principal:")
-        print("1. Actividad 1")
-        print("2. Actividad 2\n")
+        opcion = input("Selecciona una opción (1, 2, o s para salir): ")
 
-        opcion = input("Seleccione una opción ('C' para salir): ")
-
-        if opcion == "1":
-            os.system('cls' if os.name == 'nt' else 'clear')
-            input("Has seleccionado Actividad 1.\n") 
-            menu_1()
-
-        elif opcion == "2":
-            os.system('cls' if os.name == 'nt' else 'clear')
-            input("Has seleccionado Actividad 2\n")
-            menu_2()
-
-        elif opcion.lower() == "c":
-            print("\nCerrando la aplicación. ¡Hasta luego!\n")
+        if opcion == '1':
+            opcion_1()
+        elif opcion == '2':
+            opcion_2()
+        elif opcion.lower() == 's':
+            print("Saliendo del programa...")
             break
         else:
-            os.system('cls' if os.name == 'nt' else 'clear')
-            input("Opción no válida.")
+            print("Opción no válida. Selecciona 1, 2, o s para salir.")
 
-Menu_principal()
+if __name__ == "__main__":
+    menu()
