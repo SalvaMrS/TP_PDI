@@ -3,7 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import logging
 
-
 def setup_logger():
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
@@ -32,12 +31,13 @@ class LocalHistogramEqualizer:
     Attributes:
       image (numpy.ndarray): La imagen en escala de grises a procesar.
       window_size (int): El tamaño de la ventana para la ecualización local.
+      logger (logging.Logger): Instancia del logger.
     """
     def __init__(self, image_path, window_size):
+        self.logger = setup_logger()
         self.image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
         self.window_size = window_size
         self.output_image = self.equalize()
-        self.logger = setup_logger()
 
     def equalize(self):
         """
@@ -71,22 +71,17 @@ class LocalHistogramEqualizer:
         """
         Muestra la imagen original y la ecualizada una al lado de la otra.
         """
-
         try:
             plt.subplot(121), plt.imshow(self.image, cmap='gray'), plt.title('Imagen Original')
             plt.subplot(122), plt.imshow(self.output_image, cmap='gray'), plt.title('Imagen Procesada')
             plt.show()
-
         except Exception as e:
-            error_message = f'Error al mostrar las imagenes: {str(e)}'
+            error_message = f'Error al mostrar las imágenes: {str(e)}'
             self.logger.error(error_message)
 
     def show_input_image(self):
         """
         Muestra la imagen de entrada en una ventana.
-
-        Raises:
-            Exception: Si ocurre un error al mostrar la imagen.
         """
         try:
             cv2.imshow('Imagen de Entrada', self.image)
@@ -96,18 +91,12 @@ class LocalHistogramEqualizer:
             error_message = f'Error al mostrar la imagen de entrada: {str(e)}'
             self.logger.error(error_message)
 
-    def show_output_image(self, output_image):
+    def show_output_image(self):
         """
         Muestra la imagen procesada en una ventana.
-
-        Args:
-            output_image (numpy.ndarray): La imagen procesada.
-
-        Raises:
-            Exception: Si ocurre un error al mostrar la imagen.
         """
         try:
-            cv2.imshow('Imagen Procesada', output_image)
+            cv2.imshow('Imagen Procesada', self.output_image)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
         except Exception as e:
@@ -117,12 +106,10 @@ class LocalHistogramEqualizer:
     def close(self):
         """
         Cierra todas las ventanas abiertas.
-
-        Raises:
-            Exception: Si ocurre un error al cerrar las ventanas.
         """
         try:
             cv2.destroyAllWindows()
         except Exception as e:
             error_message = f'Error al cerrar todas las ventanas: {str(e)}'
             self.logger.error(error_message)
+
