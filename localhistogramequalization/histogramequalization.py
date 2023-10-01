@@ -32,6 +32,7 @@ class LocalHistogramEqualizer:
       image (numpy.ndarray): La imagen en escala de grises a procesar.
       window_size (int): El tamaño de la ventana para la ecualización local.
       logger (logging.Logger): Instancia del logger.
+      output_image (numpy.ndarray): La imagen en escala de grises luego de procesar.
     """
     def __init__(self, image_path, window_size):
         self.logger = setup_logger()
