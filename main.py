@@ -1,4 +1,5 @@
 import logging
+import os
 from formfieldextractor.fieldextractor import FormFieldExtractor
 from localhistogramequalization.histogramequalization import LocalHistogramEqualizer
 
@@ -34,6 +35,8 @@ imagenes = {
 # Opción 1: Ecualización local de histograma
 def opcion_1():
     try:
+        os.system('cls' if os.name == 'nt' else 'clear')
+
         window_size = int(input("Selecciona un tamaño de ventana para el Ejercicio 1: "))
         image_path = 'Imagenes/Imagen_con_detalles_escondidos.tif'
         equalizer = LocalHistogramEqualizer(image_path, window_size)
@@ -48,6 +51,8 @@ def opcion_1():
 # Opción 2: Validación de formulario
 def opcion_2():
     while True:
+        os.system('cls' if os.name == 'nt' else 'clear')
+
         print('Seleccione una imagen para analizar: ')
         for key, value in imagenes.items():
             print(f'{key}. {value}')
@@ -58,10 +63,12 @@ def opcion_2():
             break  
 
         if seleccion.lower() == 's':
-            print("Saliendo de la opción 2...")
+            print("\nSaliendo de la opción 2...\n")
             return  # Salir de la función opcion_2
 
         try:
+            os.system('cls' if os.name == 'nt' else 'clear')
+
             seleccion = int(seleccion)
             imagen = imagenes.get(seleccion, '')
 
@@ -72,6 +79,8 @@ def opcion_2():
                 for idx, (campo, resultado) in enumerate(resultados, 1):
                     print(f"{idx}. {campo}:\t{resultado}")
             
+            input("\nPresione cualquier tecla para continuar.")
+            
         except ValueError as ve:
             print(f"Error: {ve}")
             logger.error(f"Error en la Opción 2: {ve}")
@@ -79,6 +88,8 @@ def opcion_2():
 # Menú principal
 def menu():
     while True:
+        os.system('cls' if os.name == 'nt' else 'clear')
+
         print("\nMenú:")
         print("1) Ecualización local de histograma")
         print("2) Validación de formulario")
@@ -91,10 +102,10 @@ def menu():
         elif opcion == '2':
             opcion_2()
         elif opcion.lower() == 's':
-            print("Saliendo del programa...")
+            print("\nSaliendo del programa...\n")
             break
         else:
-            print("Opción no válida. Selecciona 1, 2, o s para salir.")
+            input("Opción no válida. Selecciona 1, 2, o s para salir.")
 
 if __name__ == "__main__":
     menu()
