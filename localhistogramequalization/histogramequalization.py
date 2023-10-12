@@ -61,7 +61,7 @@ class LocalHistogramEqualizer:
                     if (cdf.max() - cdf.min()) == 0:
                         continue
                     cdf_normalized = (cdf - cdf.min()) * 255 / (cdf.max() - cdf.min())
-                    output_image[y, x] = cdf_normalized[roi[0, 0]]
+                    output_image[y, x] = cdf_normalized[roi[half_window, half_window]]
 
             return output_image
         except Exception as e:
